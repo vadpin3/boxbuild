@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Окт 23 2020 г., 02:32
+-- Время создания: Ноя 15 2020 г., 00:46
 -- Версия сервера: 5.7.29
 -- Версия PHP: 7.1.33
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- База данных: `lesson5`
+-- База данных: `less5`
 --
 
 -- --------------------------------------------------------
@@ -29,20 +29,20 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL,
-  `author` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `name_project` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `id_users` int(11) DEFAULT NULL,
+  `name_project` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `project`
 --
 
-INSERT INTO `project` (`id`, `author`, `name_project`) VALUES
-(1, 'Иван', 'Входящие'),
-(2, 'Ярослав', 'Учеба'),
-(3, 'Ярослав', 'Работа'),
-(4, 'Олег', 'Домашние дела'),
-(5, 'Ярослав', 'Авто');
+INSERT INTO `project` (`id`, `id_users`, `name_project`) VALUES
+(1, 1, 'Входящие'),
+(2, 3, 'Учеба'),
+(3, 3, 'Работа'),
+(4, 2, 'Домашние дела'),
+(5, 1, 'Авто');
 
 -- --------------------------------------------------------
 
@@ -52,24 +52,23 @@ INSERT INTO `project` (`id`, `author`, `name_project`) VALUES
 
 CREATE TABLE `task` (
   `id` int(11) NOT NULL,
-  `status_task` int(1) DEFAULT NULL,
-  `name_task` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `file` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `date_task` date NOT NULL,
-  `dd_task` date DEFAULT NULL
+  `id_project` int(11) DEFAULT NULL,
+  `id_users` int(11) DEFAULT NULL,
+  `name_task` varchar(40) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `compl` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `task`
 --
 
-INSERT INTO `task` (`id`, `status_task`, `name_task`, `file`, `date_task`, `dd_task`) VALUES
-(1, NULL, 'Собеседование в IT', NULL, '2019-12-01', NULL),
-(2, NULL, 'Выполнить тестовое', NULL, '2019-12-25', NULL),
-(3, NULL, 'Сделать задание', NULL, '2019-12-21', NULL),
-(4, NULL, 'Встреча с другом', NULL, '2019-12-22', NULL),
-(5, NULL, 'Купить корм для кота', NULL, '2019-12-22', NULL),
-(6, NULL, 'Заказать пиццу', NULL, '2019-12-22', NULL);
+INSERT INTO `task` (`id`, `id_project`, `id_users`, `name_task`, `compl`) VALUES
+(1, 3, 3, 'Пройти собеседование', ''),
+(2, 3, 3, 'Выполнить тестовое задание', ''),
+(3, 2, 3, 'Сделать задание первого раздела', 'task--completed'),
+(4, 1, 1, 'Встреча с другом', ''),
+(5, 4, 2, 'Купить корм для кота', ''),
+(6, 4, 2, 'Заказать пиццу', '');
 
 -- --------------------------------------------------------
 
@@ -79,20 +78,17 @@ INSERT INTO `task` (`id`, `status_task`, `name_task`, `file`, `date_task`, `dd_t
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `name` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(25) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `datereg` date NOT NULL,
-  `pass` varchar(32) COLLATE utf8mb4_unicode_ci NOT NULL
+  `name` varchar(40) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `datereg`, `pass`) VALUES
-(1, 'Иван', 'ione@gmail.com', '2020-10-10', '123'),
-(2, 'Олег', 'qwene@gmail.com', '2020-10-20', 'a1s2d3'),
-(3, 'Ярослав', 'yar@gmail.com', '2020-10-14', '789456');
+INSERT INTO `users` (`id`, `name`) VALUES
+(1, 'Николай'),
+(2, 'Ольга'),
+(3, 'Ярослав');
 
 --
 -- Индексы сохранённых таблиц
@@ -102,23 +98,19 @@ INSERT INTO `users` (`id`, `name`, `email`, `datereg`, `pass`) VALUES
 -- Индексы таблицы `project`
 --
 ALTER TABLE `project`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Aindex` (`author`),
-  ADD KEY `NPindex` (`name_project`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `task`
 --
 ALTER TABLE `task`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `NTindex` (`name_task`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Индексы таблицы `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Nindex` (`name`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -141,16 +133,6 @@ ALTER TABLE `task`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- Ограничения внешнего ключа сохраненных таблиц
---
-
---
--- Ограничения внешнего ключа таблицы `project`
---
-ALTER TABLE `project`
-  ADD CONSTRAINT `project_ibfk_1` FOREIGN KEY (`author`) REFERENCES `users` (`name`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
