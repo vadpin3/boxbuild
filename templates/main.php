@@ -49,16 +49,25 @@
 
     <table class="tasks">
         <?php foreach ($task_table as $item):?>
-        <!-- если показывает задание, иначе не показывает-->
-        <?php if($show_complete_tasks == 0){
+            <?php if($show_complete_tasks == 0 && $item['compl'] == true) {
             continue;
             }?>
-        <tr class="tasks__item task">
+        <tr class="tasks__item task <?php
+                        if ($item['hour'] <= 24 && $item['hour'] !=0) {
+                            echo "task--important";
+                        }
+                        ?>   <?php
+                        if ($item['compl'] == true) {
+                            echo "task--completed";
+                        }
+                        ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php
-                        if ($show_complete_tasks==1) {
-                            echo "checked";
+                        if ($item['compl'] == true) {
+                            if ($show_complete_tasks==1) {
+                                echo "checked";
+                            }
                         }
                         ?>>
                     <span class="checkbox__text"><?=$item['task']?></span>
@@ -68,10 +77,10 @@
                 <a class="download-link" href="#">Home.psd</a>
             </td>
             <td class="task__date">
-                <?=$item['date']?>
+                <?=$item['date']?> дн.
             </td>
-            <td class="task__completed">
-                <?=$item['compl']?>
+            <td class="task__cotrols">
+                
             </td>
         </tr>
         <?php endforeach;?>

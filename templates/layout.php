@@ -36,40 +36,62 @@
             </div>
         </header>
         <?php
-            $origin = date_create('2020-10-19');
             
-            $interval1 = date_diff($origin, date_create('2020-12-01'));
-            $interval2 = date_diff($origin, date_create('2020-12-25'));
-            $interval3 = date_diff($origin, date_create('2020-12-21'));
-            $interval4 = date_diff($origin, date_create('2020-12-22'));
+            $start = "19 October 2020";
+            $start_task = strtotime($start);
+          
+            $int_end1 = "20 October 2020";
+            $int_end2 = "25 December 2020";
+            $int_end3 = "21 December 2020";
+            $int_end4 = "22 December 2020";
+            $end1 = strtotime($int_end1);
+            $end2 = strtotime($int_end2);
+            $end3 = strtotime($int_end3);
+            $end4 = strtotime($int_end4);
+            $sec_day = 86400;
+            $sec_hour = 3600;
+            $task_end1 = floor(($end1-$start_task)/$sec_day);
+            $task_end2 = floor(($end2-$start_task)/$sec_day);
+            $task_end3 = floor(($end3-$start_task)/$sec_day);
+            $task_end4 = floor(($end4-$start_task)/$sec_day);
+            $h_task_end1 = floor(($end1-$start_task)/$sec_hour);
+            $h_task_end2 = floor(($end2-$start_task)/$sec_hour);
+            $h_task_end3 = floor(($end3-$start_task)/$sec_hour);
+            $h_task_end4 = floor(($end4-$start_task)/$sec_hour);
+
+            
             
             $projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
             $task_table = array(
 
             	array(
                     'task' => 'Собеседование в IT компании',
-                    'date' => $interval1->format('%R%a дн.'),
+                    'date' => $task_end1,
+                    'hour' => $h_task_end1,
                     'cat' => 'Работа',
                     'compl' => false
 
                 ),
                 array(
                     'task' => 'Выполнить тестовое задание',
-                    'date' => $interval2->format('%R%a дн.'),
+                    'date' => $task_end2,
+                    'hour' => $h_task_end2,
                     'cat' => 'Работа',
                     'compl' => false
 
                 ),
                array(
                     'task' => 'Сделать задание первого раздела',
-                    'date' => $interval3->format('%R%a дн.'),
+                    'date' => $task_end3,
+                    'hour' => $h_task_end3,
                     'cat' => 'Учеба',
                     'compl' => true
 
                 ),
                 array(
                     'task' => 'Встреча с другом',
-                    'date' => $interval4->format('%R%a дн.'),
+                    'date' => $task_end4,
+                    'hour' => $h_task_end4,
                     'cat' => 'Входящие',
                     'compl' => false
 
@@ -82,7 +104,7 @@
 
                ),
                  array(
-                    'task' => 'Собеседование в IT компании',
+                    'task' => 'Заказать пиццу',
                     'date' => 'null',
                     'cat' => 'Домашние дела',
                     'compl' => false
