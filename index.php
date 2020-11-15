@@ -3,7 +3,7 @@
     $show_complete_tasks = rand(0, 1);
 ?>
 <?php
-    $con = mysqli_connect("localhost", "root", "root", "lesson5");
+    $con = mysqli_connect("localhost", "root", "root", "less5");
     if($con==false) {
         print("Ошибка" . mysqli_connect_error());
     }
@@ -11,13 +11,6 @@
         print("Соединение установлено");
     }
     echo "<br/>";
-    $sql = "SELECT author, name_project FROM project";
-    $result = mysqli_query($con, $sql);
-
-    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-    foreach ($rows as $row) {
-        print($row['author'] ." - ". $row['name_project']."<br/>");
-    }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -41,7 +34,7 @@
             </a>
 
             <div class="main-header__side">
-                <a class="main-header__side-item button button--plus open-modal" href="pages/form-task.html">Добавить задачу</a>
+                <a class="main-header__side-item button button--plus open-modal" href="add.php">Добавить задачу</a>
 
                 <div class="main-header__side-item user-menu">
                     <div class="user-menu__data">
@@ -111,37 +104,39 @@
 
                 <table class="tasks">
                     <?php
-                        $sqlTask = "SELECT name_task, date_task FROM task";
+                        $sqlTask = "SELECT name_task, date_task, compl FROM task";
                         $resultTask = mysqli_query($con, $sqlTask);
                     
                         $rowsTask = mysqli_fetch_all($resultTask, MYSQLI_ASSOC);
                       ?>  
-                        
-                        <?php foreach ($rowsTask as $row):?>
-                            <?php if($show_complete_tasks == 0){
-                                continue;
+                       <?php foreach ($rowsTask as $item):?>
+                            <?php if($show_complete_tasks == 0 && $item['compl'] == true) {
+                            continue;
                             }?>
-                                
-                            <tr class="tasks__item task">
+                            <tr class="tasks__item task <?php
+                                            if ($item['date_task'] == 1 && $item['date_task'] !=0) {
+                                                echo "task--important";
+                                            }
+                                            ?>   <?$item['compl']?>">
                                 <td class="task__select">
                                     <label class="checkbox task__checkbox">
-                                    <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php
-                                        if ($show_complete_tasks==1) {
-                                            echo "checked";
-                                        }
-                                        ?>
-                                    >
-                                    <span class="checkbox__text"><?=$row['name_task']?></span>
+                                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" <?php
+                                            if ($item['compl'] == true && $show_complete_tasks==1) {
+                                                    echo "checked";
+                                                }
+                                            
+                                            ?>>
+                                        <span class="checkbox__text"><?=$item['name_task']?></span>
                                     </label>
                                 </td>
                                 <td class="task__file">
-                                    <a class="download-link" href="">Home.psd</a>
+                                    <a class="download-link" href="#">Home.psd</a>
                                 </td>
                                 <td class="task__date">
-                                    <?=$row['date_task']?>
+                                    <?=$item['date_task']?> дн.
                                 </td>
-                                <td class="task__completed">
-                                <?=$row['compl']?>
+                                <td class="task__cotrols">
+                                    
                                 </td>
                             </tr>
                         <?php endforeach;?>
