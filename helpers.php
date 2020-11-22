@@ -169,3 +169,15 @@ function validateFilled($name) {
         return 'Это поле должно быть заполнено';
     }
 }
+function show_tasks_by_date ($user_id, $tab) {
+
+    if ($tab == 'today') {
+        $sql = 'SELECT id, pubdate, status, title, link, deadline, user_id, project_id FROM task ' . 'WHERE user_id = "' . $user_id . '" AND deadline = CURDATE()';
+    } elseif ($tab == 'tomorrow') {
+        $sql = 'SELECT id, pubdate, status, title, link, deadline, user_id, project_id FROM task ' . 'WHERE user_id = "' . $user_id . '" AND deadline = ADDDATE(CURDATE(),INTERVAL 1 DAY)';
+    } elseif ($tab == 'overdue') {
+        $sql = 'SELECT id, pubdate, status, title, link, deadline, user_id, project_id FROM task ' . 'WHERE user_id = "' . $user_id . '" AND deadline < CURDATE()';
+    }
+
+    return $sql;
+}

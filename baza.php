@@ -1,20 +1,25 @@
 <?php
 require_once('helpers.php');
 require('connect.php');
+
+
 $u_id = $_SESSION['id'];
 
-$con = mysqli_connect('localhost', 'root', 'root', 'itog');
-$sqlProj = "SELECT * FROM `project`";          
-$resultProj = mysqli_query($con, $sqlProj);
-$rowsProj = mysqli_fetch_all($resultProj, MYSQLI_ASSOC);
-
-$sqlttt = "SELECT * FROM `task`";
-$resulttt = mysqli_query($con, $sqlttt);
-$rowsttt = mysqli_fetch_all($resulttt, MYSQLI_ASSOC);
+$project = "SELECT * FROM project WHERE user_id = $u_id";
+$result_project = mysqli_query($con, $project);
+$project_array = mysqli_fetch_all($result_project, MYSQLI_ASSOC);
 
 
-$resull = mysqli_query($con, $sqlttt);
-$task_arr = mysqli_fetch_all($resull, MYSQLI_ASSOC);
+$tasks = "SELECT * FROM task WHERE user_id = $u_id";
+$result_tasks = mysqli_query($con, $tasks);
+$task_array = mysqli_fetch_all($result_tasks, MYSQLI_ASSOC);
 
+
+if (isset($_GET['id']) && $_GET['id']) {
+    $id_project = mysqli_real_escape_string($con, intval($_GET['id']));
+    $tasks .= " AND `project_id` = '$id_project' ";
+}
+
+$result_task = mysqli_query($con, $tasks);
+$task_arr = mysqli_fetch_all($result_task, MYSQLI_ASSOC);
 ?>
-

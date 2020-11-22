@@ -3,11 +3,12 @@
         <h2 class="content__side-heading">Проекты</h2>
 
         <nav class="main-navigation">
-        <?php foreach ($rowsProj as $value):?>
+        <?php foreach ($project_array as $value):?>
             
             <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link <?= (intval($_GET['id']) == $value['id']) ? 'main-navigation__list-item--active':'';?>" href="index.php?id=<?=$value['id']; ?>"><?=htmlspecialchars($value['title']);?></a>            
-                <span class="main-navigation__list-item-count"><?=count_task_in_cat($rowsttt, $value);?></span>
+                <a class="main-navigation__list-item-link <?= (intval($_GET['id']) == $value['id']) ? 'main-navigation__list-item--active':'';?>"
+                 href="index.php?id=<?=$value['id']; ?>"><?=htmlspecialchars($value['title']);?></a>            
+                <span class="main-navigation__list-item-count"><?=count_task_in_cat($task_array, $value);?></span>
             </li>
             <?php endforeach; ?>
                 </nav>

@@ -46,9 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 
+require('task-completed.php');
 
 
-$main = include_template('form-project.php', ['rowsttt' => $rowsttt, 'rowsProj' => $rowsProj, 'errors' => $errors]);
+$main = include_template('form-project.php', ['task_array' => $task_array, 'project_array' => $project_array, 'errors' => $errors]);
 $layout = include_template('layout.php', ['content' => $main, 'user_name' => $_SESSION['name'], 'title' => 'Добавление проекта']);
 print($layout);
 ?>

@@ -2,85 +2,58 @@
     require_once('helpers.php'); 
     ?>
 <section class="content__side">
-    <h2 class="content__side-heading">Проекты</h2>
-    <nav class="main-navigation">
-        <ul class="main-navigation__list">
-            <?php
-              $con = mysqli_connect('localhost', 'root', 'root', 'itog');
-                
-            ?>
+                <h2 class="content__side-heading">Проекты</h2>
 
-            <?php foreach ($rowsProj as $value):?>
-            
-            <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link <?= (intval($_GET['id']) == $value['id']) ? 'main-navigation__list-item--active':'';?>" href="index.php?id=<?=$value['id']; ?>"><?=htmlspecialchars($value['title']);?></a>            
-                <span class="main-navigation__list-item-count"><?=count_task_in_cat($rowsttt, $value);?></span>
-            </li>
-            <?php endforeach; ?>
-          
-        </ul>
-    </nav>
+                <nav class="main-navigation">
+                <?php foreach ($project_array as $value): ?>
+                    <ul class="main-navigation__list">
+                        <li class="main-navigation__list-item">
+                            <a class="main-navigation__list-item-link
+                            <?= (intval($_GET['id']) == $value['id']) ? 'main-navigation__list-item--active':'';?>" href="index.php?id=<?=$value['id']; ?>">
+                            <?=htmlspecialchars($value['title']);?>
+                            </a>
+                            <span class="main-navigation__list-item-count"><?=count_task_in_cat($task_array, $value);?></span>
+                        </li>
+                    </ul>
+                <?php endforeach; ?>
+                </nav>
 
-    <a class="button button--transparent button--plus content__side-button"
-        href="project.php" target="project_add">Добавить проект</a>
-</section>
+                <a class="button button--transparent button--plus content__side-button"
+                   href="project.php" target="project_add">Добавить проект</a>
+            </section>
 
-<main class="content__main">
-    <h2 class="content__main-heading">Список задач</h2>
+            <main class="content__main">
+                <h2 class="content__main-heading">Список задач</h2>
 
-    
+                <form class="search-form" action="index.php" method="get" autocomplete="off">
+                    <input class="search-form__input" type="text" name="search" value="<?=trim(filter_input(INPUT_GET, 'search')) ?>" placeholder="Поиск по задачам">
 
-    <form class="search-form" action="index.php" method="GET" autocomplete="off">
-        <input class="search-form__input" type="text" name="" value="" placeholder="Поиск по задачам">
-        <?php
-        
-            $contask = mysqli_connect("localhost", "root", "root", "itog");
-                if($contask==false) {
-                    print("Ошибка" . mysqli_connect_error());
-                }
-                else {
-                    print("Соединение установлено");
-                }
-            $task = [];
-            mysqli_query($contask, 'CREATE FULLTEXT INDEX task_search ON task(name_task)');
-            
-         
-        ?>
+                    <input class="search-form__submit" type="submit" name="" value="Искать">
+                </form>
 
-        <input class="search-form__submit" type="submit" name="" value="Искать">
-    </form>
-    
-    
+                <div class="tasks-controls">
+                    <nav class="tasks-switch">
+                        <?php if (isset($_GET['date_list'])) {
+                            $active_tab = $_GET['date_list'];
+                        }?>
+                            <a href="/" class="tasks-switch__item <?= ($active_tab === '' || !isset($_GET['date_list'])) ? 'tasks-switch__item--active':''; ?>">Все задачи</a>
+                            <a href="index.php?date_list=today" class="tasks-switch__item  <?= ($active_tab === 'today') ? 'tasks-switch__item--active':''; ?>">Повестка дня</a>
+                            <a href="index.php?date_list=tomorrow" class="tasks-switch__item  <?= ($active_tab === 'tomorrow') ? 'tasks-switch__item--active':''; ?>">Завтра</a>
+                            <a href="index.php?date_list=overdue" class="tasks-switch__item  <?= ($active_tab === 'overdue') ? 'tasks-switch__item--active':''; ?>">Просроченные</a>
+                    </nav>
 
-    <div class="tasks-controls">
-        <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
-        </nav>
+                    <label class="checkbox">
+                        <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?= ($show_complete_tasks) ? 'checked':'';?>>
+                        <span class="checkbox__text">Показывать выполненные</span>
+                    </label>
+                </div>
 
-        <label class="checkbox">
-            <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-            <input class="checkbox__input visually-hidden show_completed" type="checkbox"
-                <?php
-                if ($show_complete_tasks==1) {
-                    echo "checked";
-                }
-                  ?>
-              >
-            <span class="checkbox__text">Показывать выполненные</span>
-        </label>
-    </div>
-
-    <table class="tasks">
-    
-           
-                <?php foreach ($rowsttt as $item):
-                    if (!$show_complete_tasks && $item['status']) {
-                    continue;
-                }?>
-                <tr class="tasks__item task <?= ($item['status']) ? 'task--completed':'';?>
+                <table class="tasks">
+                    <?php foreach ($task_arr as $item):
+                        if (!$show_complete_tasks && $item['status']) {
+                        continue;
+                    }?>
+                    <tr class="tasks__item task <?= ($item['status']) ? 'task--completed':'';?>
                                                 <?= ((task_important($item['deadline'])) && !$item['status']) ? 'task--important':'';?>">
                         <td class="task__select">
                             <label class="checkbox task__checkbox">
@@ -93,18 +66,15 @@
                         </td>
                         <td class="task__file">
                             <?php if ($item['link']): ?>
-                                <a class="download-link" href="<?='/uploads/'.$item['link']; ?>">Home.psd</a>
+                                <a class="download-link" href="<?='/uploads/'.$item['link']; ?>"><?=$item['link']; ?></a>
                             <?php endif; ?>
                         </td>
                         <td class="task__date"><?=$item['deadline'];?></td>
 
                     </tr>
-                    
-            <?php endforeach;?>
-        
-        
-                      
-        
-    </table>
-    
-</main>
+                    <?php endforeach; ?>
+                    <?php if (!empty($_GET['search']) && empty($task_arr)): ?>
+                        <p class="error-message">Ничего не найдено по вашему запросу</p>
+                    <?php endif; ?>
+                </table>
+            </main>

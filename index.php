@@ -12,7 +12,8 @@
         exit();
     }
     require('baza.php');
-    
+    require('task-completed.php');
+
     function getSearchTasks ($con, $search) {
         $u_id = $_SESSION['id'];
         $sql = 'SELECT * FROM task WHERE user_id = "' . $u_id . '" AND MATCH(title) AGAINST (? IN BOOLEAN MODE)';
@@ -47,10 +48,9 @@
     }
    
    
-    $main = include_template('main.php', ['rowsttt' => $rowsttt, 'task_arr' => $task_arr, 'rowsProj' => $rowsProj, 'show_complete_tasks' => $show_complete_tasks]);
+    $main = include_template('main.php', ['task_array' => $task_array, 'task_arr' => $task_arr, 'project_array' => $project_array, 'show_complete_tasks' => $show_complete_tasks]);
     $layout = include_template('layout.php', ['content' => $main, 'user_name' => $_SESSION['name'], 'title' => 'Дела в порядке | Главная']);
-    
-    print($layout);  
+    print($layout); 
 ?>
 
 
