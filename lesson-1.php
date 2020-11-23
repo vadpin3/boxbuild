@@ -323,14 +323,42 @@
   Подсказка: 012345 - тоже вариант пароля.
   */
   echo "<br/>";
-  $password='302390';
+   $pass='111111';
+  for ($password = 0; $password <= 999999; $password++) {
+    if ($password==$pass){
+      if (strlen($password)== 0){
+        $str='000000';
+        echo "Пароль $str";
+      }
+      else if (strlen($password)== 1){
+        $str='00000';
+        echo "Пароль $str$password";
+      }
+      else if (strlen($password)== 2){
+        $str='0000';
+        echo "Пароль $str$password";
+      }
+      else if (strlen($password)== 3){
+        $str='000';
+        echo "Пароль $str$password";
+      }
+      else if (strlen($password)== 4){
+        $str='00';
+        echo "Пароль $str$password";
+      }
+      else if (strlen($password)== 5){
+        $str='0';
+        echo "Пароль $str$password";
+      }
+      else {
+        echo "Пароль $password";
+      }
+
+    } 
   
-  for ($password = 000000; $password <= 999999; $password++) {
-    if ($password=302390){
-      echo "Пароль найден $password";
-    } break;
     
   }
+  echo "<br/>";
   echo "<br/>";
 
 
